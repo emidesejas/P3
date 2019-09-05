@@ -4,7 +4,15 @@
 #include "include/utils.h"
 #include "include/grafo.h"
 #include "include/lista_pares.h"
+#include "include/lista.h"
 
+struct level{
+    nat id;
+    Lista elements;
+    level *next;
+};
+
+typedef level *bfsLevels;
 
 int main(){
     nat n, m, e1, e2;
@@ -29,8 +37,24 @@ int main(){
 }
 
 bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja secuelas?
-    bool colonizado[cantidad_vertices(G)];
+    bool discovered[cantidad_vertices(G)];
+    bool label[cantidad_vertices(G)];
+    for(int i = 0; i < cantidad_vertices(G); i++) {
+        discovered[i] = false;
+    }
+    bfsLevels levels = new level;
+    levels -> id = 0; // No es necesario, se borrará en futuras versiones (es el numero del nivel)
+    levels -> elements = crear_lista();
+    insertar(0, levels->elements);
+    while(!es_vacia_lista(levels -> elements)){
+        // Basicamente crear nuevo nodo de bfs levels con los nodos que son incidentes a v en el grafo (usar pila para ir haciendo pop de cada nodo y poder irlos agregando)
+    }
     
 }
 
-bfs <3
+void bfs(nat node, Grafo G, bool *discovered){
+    discovered[node] = true;
+
+}
+
+// HACER FUNCIONES PARA MANIPULAR BFSLEVELS, DESTRUIR MOVERSE ETC.
