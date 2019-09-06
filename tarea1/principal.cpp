@@ -67,18 +67,35 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     //levels -> elements = crear_cola();
     //encolar(0, levels -> elements);
     Cola elements = crear_cola();
-    encolar(0, elements);
-    killButterfly(0, Butterflies, auxList);
-    while(!es_vacia_cola(elements)){
-        Lista_pares incidents = adyacentes(frente(elements), G);
-        discovered[frente(elements)] = true;
+    //encolar(0, elements);
+    //killButterfly(0, Butterflies, auxList);
+    while(auxList != NULL){
+        encolar(auxList -> id, elements);
+        label[auxList -> id] = true;
+        while(!es_vacia_cola(elements)){
+            Lista_pares incidents = adyacentes(frente(elements), G);
 
+            discovered[frente(elements)] = true;
+            killButterfly(frente(elements), Butterflies, auxList);
+            
 
+            while(!es_vacia_lista_pares(incidents)){
+                Par_nat_int vertex = primer_par(incidents);
+                encolar(vertex.id, elements);
+                if (vertex.valor = int('=')){
+                    label[vertex.id] = label[frente(elements)];
+                } else {
+                    label[vertex.id] = !label[frente(elements)];
+                }
+                remover_par(vertex.id, incidents);
+            }
+            destruir_lista_pares(incidents);
+            desencolar(elements);
 
         // Basicamente crear nuevo nodo de bfs levels con los nodos que son incidentes a v en el grafo (usar pila para ir haciendo pop de cada nodo y poder irlos agregando)
 
+        }
     }
-    
 }
 
 void bfs(nat node, Grafo G, bool *discovered){
@@ -86,7 +103,7 @@ void bfs(nat node, Grafo G, bool *discovered){
 
 }
 
-void killButterfly(nat id, ButterfliesList *Array, ButterfliesList List){ //Se me fue de las manos esto pero sino no me aseguro el O(1)
+void killButterfly(nat id, ButterfliesList *Array, ButterfliesList &List){ //Se me fue de las manos esto pero sino no me aseguro el O(1)
     if(Array[id] != NULL){
         if(Array[id] -> prev != NULL){
             Array[id] -> prev -> next = Array[id] -> next;
