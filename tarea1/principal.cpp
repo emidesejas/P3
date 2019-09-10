@@ -6,6 +6,7 @@
 #include "include/lista_pares.h"
 #include "include/lista.h"
 #include "include/cola.h"
+#include "include/pila.h"
 
 struct butterfly{
     nat id;
@@ -14,6 +15,12 @@ struct butterfly{
 };
 
 typedef butterfly *ButterfliesList;
+
+struct Edges{ //How to make a useful structure out of useless structures Part I
+    Pila first;
+    Lista_pares second;
+};
+
 
 int main(){
     nat n, m, e1, e2;
@@ -69,25 +76,38 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     Cola elements = crear_cola();
     //encolar(0, elements);
     //killButterfly(0, Butterflies, auxList);
+
+    Edges graph;
+    graph.first = crear_pila();
+    graph.second = crear_lista_pares();
+
+
     while(auxList != NULL){
         encolar(auxList -> id, elements);
         label[auxList -> id] = true;
         while(!es_vacia_cola(elements)){
-            Lista_pares incidents = adyacentes(frente(elements), G);
+            nat vertexA = frente(elements);
+            Lista_pares incidents = adyacentes(vertexA, G);
 
-            discovered[frente(elements)] = true;
-            killButterfly(frente(elements), Butterflies, auxList);
+            discovered[vertexA] = true;
+            killButterfly(vertexA, Butterflies, auxList); //I'm in love with Visual Studio Code
             
 
             while(!es_vacia_lista_pares(incidents)){
-                Par_nat_int vertex = primer_par(incidents);
-                encolar(vertex.id, elements);
-                if (vertex.valor = int('=')){
-                    label[vertex.id] = label[frente(elements)];
+                Par_nat_int vertexB = primer_par(incidents);
+                encolar(vertexB.id, elements);
+
+                if (vertexB.valor = int('=')){
+                    label[vertexB.id] = label[vertexA];
                 } else {
-                    label[vertex.id] = !label[frente(elements)];
+                    label[vertexB.id] = !label[vertexA];
                 }
-                remover_par(vertex.id, incidents);
+
+                if(!alreadyChecked(vertexB.id, Butterflies)){ // if we already checked B we don't care about registering its link with A
+                    apilar(vertexA, graph.first); // YOU SHOULD CREATE A FUNCTION CALLED STACK TO INSERT SOMETHING
+                    insertar_par(vertexB, graph.second); //HERE WE'RE GONNA TO HAVE A MEMORY LEAK, TRUST ME
+                }
+                remover_par(vertexB.id, incidents);
             }
             destruir_lista_pares(incidents);
             desencolar(elements);
@@ -96,10 +116,38 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
         }
     }
+
+    while(!es_vacia_pila(graph.first)) { //PUT THIS IN ANOTHER FUNCTION Should be implemented in match function
+        if (primer_par(graph.second).valor = int('=')) {
+            if (label[cima(graph.first)] != label[primer_par(graph.second).id]){
+                break;
+            }
+        } else {
+            if (label[cima(graph.first)] == label[primer_par(graph.second).id]){
+                break;
+            }
+        }
+    }
+
+    if (!es_vacia_pila(graph.first)){
+        destruir_pila(graph.first);
+        destruir_lista_pares(graph.second);
+        return false;
+    } else {
+        return true;
+    }
 }
 
 void bfs(nat node, Grafo G, bool *discovered){
     discovered[node] = true;
+
+}
+
+bool alreadyChecked(nat node, ButterfliesList *Array){ //Return true when we already checked node
+    return Array[node] == NULL;
+}
+
+bool match(){
 
 }
 
