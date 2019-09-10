@@ -21,6 +21,11 @@ struct Edges{ //How to make a useful structure out of useless structures Part I
     Lista_pares second;
 };
 
+bool consistenteMaximal(Grafo G);
+
+void killButterfly(nat id, ButterfliesList *Array, ButterfliesList &List);
+
+bool alreadyChecked(nat node, ButterfliesList *Array);
 
 int main(){
     nat n, m, e1, e2;
@@ -45,19 +50,19 @@ int main(){
 }
 
 bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja secuelas?
-    bool discovered[cantidad_vertices(G)];
+    //bool discovered[cantidad_vertices(G)];
     bool label[cantidad_vertices(G)];
     ButterfliesList Butterflies[cantidad_vertices(G)];
     ButterfliesList auxList = new butterfly();
     auxList -> id = 0;
     auxList -> next = NULL;
     auxList -> prev = NULL;
-    discovered[0] = false;
+    //discovered[0] = false;
 
     Butterflies[0] = auxList;
     ButterfliesList cursor = auxList;
-    for(int i = 1; i < cantidad_vertices(G); i++) {
-        discovered[i] = false;
+    for(nat i = 1; i < cantidad_vertices(G); i++) { //ATENTO ACAAAA
+        //discovered[i] = false;
         cursor -> next = new butterfly();
         cursor -> next -> prev = cursor;
         cursor = cursor -> next;
@@ -87,9 +92,10 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
         label[auxList -> id] = true;
         while(!es_vacia_cola(elements)){
             nat vertexA = frente(elements);
-            Lista_pares incidents = adyacentes(vertexA, G);
-
-            discovered[vertexA] = true;
+            adyacentes(vertexA, G);
+            Lista_pares incidents = copia_lista_pares(adyacentes(vertexA, G));
+            
+            //discovered[vertexA] = true;
             killButterfly(vertexA, Butterflies, auxList); //I'm in love with Visual Studio Code
             
 
@@ -97,7 +103,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
                 Par_nat_int vertexB = primer_par(incidents);
                 encolar(vertexB.id, elements);
 
-                if (vertexB.valor = int('=')){
+                if (vertexB.valor == int('=')){
                     label[vertexB.id] = label[vertexA];
                 } else {
                     label[vertexB.id] = !label[vertexA];
@@ -118,7 +124,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     }
 
     while(!es_vacia_pila(graph.first)) { //PUT THIS IN ANOTHER FUNCTION Should be implemented in match function
-        if (primer_par(graph.second).valor = int('=')) {
+        if (primer_par(graph.second).valor == int('=')) {
             if (label[cima(graph.first)] != label[primer_par(graph.second).id]){
                 break;
             }
@@ -137,19 +143,19 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
         return true;
     }
 }
-
+/* 
 void bfs(nat node, Grafo G, bool *discovered){
     discovered[node] = true;
 
-}
+} */
 
 bool alreadyChecked(nat node, ButterfliesList *Array){ //Return true when we already checked node
     return Array[node] == NULL;
 }
 
-bool match(){
+/* bool match(){
 
-}
+} */
 
 void killButterfly(nat id, ButterfliesList *Array, ButterfliesList &List){ //Se me fue de las manos esto pero sino no me aseguro el O(1)
     if(Array[id] != NULL){
