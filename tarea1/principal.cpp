@@ -16,10 +16,11 @@ struct butterfly{
 
 typedef butterfly *ButterfliesList;
 
-struct Edges{ //How to make a useful structure out of useless structures Part I
-    Pila first;
-    Lista_pares second;
-};
+typedef struct edge_t{
+    nat e1;
+    nat e2;
+    int value;
+} Edge;
 
 bool consistenteMaximal(Grafo G);
 
@@ -38,21 +39,18 @@ int main(){
     for(nat i = 0; i < m; i++){
         scanf("%d %d %c", &e1, &e2, &juicio);
         agregar_arista(e1, e2, int(juicio), mariposas);
-        // Aqui darle calor a e1, e2 y juicio, juira cucha
     }
 
-    //bool resultado;
-
-    //resultado = algo jejejejejeje
-
-    printf("%s", consistenteMaximal(mariposas)?"Consitente":"No consistente"); //Esta linea consiste en decir si es consistente o no es consistente, porque sino, de que consistiria la tarea verdad?, es una inconsistencia maximal que esta tarea no consista en preguntar acerca de la consitencia de las mariposas. Espero que sus vidas sean consistentes y que el señor consistente los consista
+    printf("%s", consistenteMaximal(mariposas)?"Consistente":"No consistente"); //Esta linea consiste en decir si es consistente o no es consistente, porque sino, de que consistiria la tarea verdad?, es una inconsistencia maximal que esta tarea no consista en preguntar acerca de la consitencia de las mariposas. Espero que sus vidas sean consistentes y que el señor consistente los consista
     destruir_grafo(mariposas); //A.K.A. matar mariposas :(
 }
 
 bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja secuelas?
     //bool discovered[cantidad_vertices(G)];
+    Edge Edges[cantidad_aristas(G)];
     bool label[cantidad_vertices(G)];
     ButterfliesList Butterflies[cantidad_vertices(G)];
+    nat arista = 0; //Se usa como contador para recorrer el array Edges
     ButterfliesList auxList = new butterfly();
     auxList -> id = 1;
     auxList -> next = NULL;
@@ -82,11 +80,6 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     //encolar(0, elements);
     //killButterfly(0, Butterflies, auxList);
 
-    Edges graph;
-    graph.first = crear_pila();
-    graph.second = crear_lista_pares();
-
-
     while(auxList != NULL){
         encolar(auxList -> id, elements);
         label[auxList -> id - 1] = true;
@@ -101,25 +94,28 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
             //discovered[vertexA] = true;
             killButterfly(vertexA, Butterflies, auxList); //I'm in love with Visual Studio Code
-
+            Par_nat_int vertexB = primer_par(incidents);
             while(!es_vacia_lista_pares(incidents)){
-                Par_nat_int vertexB = primer_par(incidents);
                 //printf("%d %d", vertexA, vertexB.id);
                 if (vertexB.valor == int('=')){
                     label[vertexB.id - 1] = label[vertexA - 1];
                 } else {
                     label[vertexB.id - 1] = !label[vertexA - 1];
                 }
-
                 if(!alreadyChecked(vertexB.id, Butterflies)){ // if we already checked B we don't care about registering its link with A
-                    apilar(vertexA, graph.first); // YOU SHOULD CREATE A FUNCTION CALLED STACK TO INSERT SOMETHING
-                    insertar_par(vertexB, graph.second); //HERE WE'RE GONNA TO HAVE A MEMORY LEAK, TRUST ME
+                    Edges[arista].e1 = vertexA;
+                    Edges[arista].e2 = vertexB.id;
+                    Edges[arista].value = vertexB.valor;
+                    arista++;
+                    /*  apilar(vertexA, graph.first); // YOU SHOULD CREATE A FUNCTION CALLED STACK TO INSERT SOMETHING
+                    insertar_par(vertexB, graph.second); //HERE WE'RE GONNA TO HAVE A MEMORY LEAK, TRUST ME */
 
                     encolar(vertexB.id, elements);
-                    killButterfly(vertexB.id, Butterflies, auxList);
                 }
+                
                 incidents = resto_pares(incidents);
             }
+            killButterfly(vertexB.id, Butterflies, auxList);
             destruir_lista_pares(incidents);
             desencolar(elements);
 
@@ -129,8 +125,20 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     }
 
     destruir_cola(elements);
-
-    while(!es_vacia_pila(graph.first)) { //PUT THIS IN ANOTHER FUNCTION Should be implemented in match function
+    nat i = 0;
+    while(i < arista){
+        if (Edges[i].value == int('=')) {
+            if (label[Edges[i].e1 - 1] != label[Edges[i].e2 - 1]){
+                break;
+            }
+        } else {
+            if (label[Edges[i].e1 - 1] == label[Edges[i].e2 - 1]){
+                break;
+            }
+        }
+        i++;
+    }
+   /*  while(!es_vacia_pila(graph.first)) { //PUT THIS IN ANOTHER FUNCTION Should be implemented in match function
         if (primer_par(graph.second).valor == int('=')) {
             if (label[cima(graph.first) - 1] != label[primer_par(graph.second).id- 1]){
                 break;
@@ -142,19 +150,14 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
         }
         desapilar(graph.first);
         graph.second = resto_pares(graph.second);
-    }
+    } */
 
     
     
-    destruir_lista_pares(graph.second);
 
-    if (!es_vacia_pila(graph.first)){
-        destruir_pila(graph.first);
-        destruir_lista_pares(graph.second);
+    if (i <= arista){ //El juail no llego a la ultima arista
         return false;
     } else {
-        destruir_pila(graph.first);
-        destruir_lista_pares(graph.second);
         return true;
     }
 }
