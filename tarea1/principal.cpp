@@ -71,7 +71,6 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
     //JMMM DUDOSO TODO ESTO ^^^^^^^
 
-
     //bfsLevels levels = new level;
     //levels -> id = 0; // No es necesario, se borrará en futuras versiones (es el numero del nivel)
     //levels -> elements = crear_cola();
