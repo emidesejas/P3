@@ -114,7 +114,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
                 if(!alreadyChecked(vertexB.id, Butterflies)){ // if we already checked B we don't care about registering its link with A
                     apilar(vertexA, graph.first); // YOU SHOULD CREATE A FUNCTION CALLED STACK TO INSERT SOMETHING
                     insertar_par(vertexB, graph.second); //HERE WE'RE GONNA TO HAVE A MEMORY LEAK, TRUST ME
-                    
+
                     encolar(vertexB.id, elements);
                     killButterfly(vertexB.id, Butterflies, auxList);
                 }
@@ -143,6 +143,10 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
         desapilar(graph.first);
         graph.second = resto_pares(graph.second);
     }
+
+    
+    
+    destruir_lista_pares(graph.second);
 
     if (!es_vacia_pila(graph.first)){
         destruir_pila(graph.first);
