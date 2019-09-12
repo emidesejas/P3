@@ -104,7 +104,6 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
             while(!es_vacia_lista_pares(incidents)){
                 Par_nat_int vertexB = primer_par(incidents);
-                
                 //printf("%d %d", vertexA, vertexB.id);
                 if (vertexB.valor == int('=')){
                     label[vertexB.id - 1] = label[vertexA - 1];
@@ -133,7 +132,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
     while(!es_vacia_pila(graph.first)) { //PUT THIS IN ANOTHER FUNCTION Should be implemented in match function
         if (primer_par(graph.second).valor == int('=')) {
-            if (label[cima(graph.first) - 1] != label[primer_par(graph.second).id] - 1){
+            if (label[cima(graph.first) - 1] != label[primer_par(graph.second).id- 1]){
                 break;
             }
         } else {
@@ -141,6 +140,8 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
                 break;
             }
         }
+        desapilar(graph.first);
+        graph.second = resto_pares(graph.second);
     }
 
     if (!es_vacia_pila(graph.first)){
@@ -148,6 +149,8 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
         destruir_lista_pares(graph.second);
         return false;
     } else {
+        destruir_pila(graph.first);
+        destruir_lista_pares(graph.second);
         return true;
     }
 }
