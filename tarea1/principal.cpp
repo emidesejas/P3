@@ -54,20 +54,20 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     bool label[cantidad_vertices(G)];
     ButterfliesList Butterflies[cantidad_vertices(G)];
     ButterfliesList auxList = new butterfly();
-    auxList -> id = 0;
+    auxList -> id = 1;
     auxList -> next = NULL;
     auxList -> prev = NULL;
     //discovered[0] = false;
 
     Butterflies[0] = auxList;
     ButterfliesList cursor = auxList;
-    for(nat i = 1; i < cantidad_vertices(G); i++) { //ATENTO ACAAAA
+    for(nat i = 2; i <= cantidad_vertices(G); i++) { //ATENTO ACAAAA
         //discovered[i] = false;
         cursor -> next = new butterfly();
         cursor -> next -> prev = cursor;
         cursor = cursor -> next;
         cursor -> id = i;
-        Butterflies[i] = cursor;
+        Butterflies[i - 1] = cursor;
     }
     cursor -> next = NULL;
 
@@ -89,31 +89,37 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
     while(auxList != NULL){
         encolar(auxList -> id, elements);
-        label[auxList -> id] = true;
+        label[auxList -> id - 1] = true;
         while(!es_vacia_cola(elements)){
             nat vertexA = frente(elements);
-            adyacentes(vertexA, G);
-            Lista_pares incidents = copia_lista_pares(adyacentes(vertexA, G));
+            Lista_pares incidents = adyacentes(vertexA, G);
             
+            /* while(!es_vacia_lista_pares(incidents)){
+                printf("%d %d\n", vertexA, primer_par(incidents).id);
+                incidents = resto_pares(incidents); //Por alguna razon hay guardado un 0 y un 2 aca
+            } */
+
             //discovered[vertexA] = true;
             killButterfly(vertexA, Butterflies, auxList); //I'm in love with Visual Studio Code
-            
 
             while(!es_vacia_lista_pares(incidents)){
                 Par_nat_int vertexB = primer_par(incidents);
-                encolar(vertexB.id, elements);
-
+                
+                //printf("%d %d", vertexA, vertexB.id);
                 if (vertexB.valor == int('=')){
-                    label[vertexB.id] = label[vertexA];
+                    label[vertexB.id - 1] = label[vertexA - 1];
                 } else {
-                    label[vertexB.id] = !label[vertexA];
+                    label[vertexB.id - 1] = !label[vertexA - 1];
                 }
 
                 if(!alreadyChecked(vertexB.id, Butterflies)){ // if we already checked B we don't care about registering its link with A
                     apilar(vertexA, graph.first); // YOU SHOULD CREATE A FUNCTION CALLED STACK TO INSERT SOMETHING
                     insertar_par(vertexB, graph.second); //HERE WE'RE GONNA TO HAVE A MEMORY LEAK, TRUST ME
+                    
+                    encolar(vertexB.id, elements);
+                    killButterfly(vertexB.id, Butterflies, auxList);
                 }
-                remover_par(vertexB.id, incidents);
+                incidents = resto_pares(incidents);
             }
             destruir_lista_pares(incidents);
             desencolar(elements);
@@ -123,13 +129,15 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
         }
     }
 
+    destruir_cola(elements);
+
     while(!es_vacia_pila(graph.first)) { //PUT THIS IN ANOTHER FUNCTION Should be implemented in match function
         if (primer_par(graph.second).valor == int('=')) {
-            if (label[cima(graph.first)] != label[primer_par(graph.second).id]){
+            if (label[cima(graph.first) - 1] != label[primer_par(graph.second).id] - 1){
                 break;
             }
         } else {
-            if (label[cima(graph.first)] == label[primer_par(graph.second).id]){
+            if (label[cima(graph.first) - 1] == label[primer_par(graph.second).id - 1]){
                 break;
             }
         }
@@ -150,7 +158,7 @@ void bfs(nat node, Grafo G, bool *discovered){
 } */
 
 bool alreadyChecked(nat node, ButterfliesList *Array){ //Return true when we already checked node
-    return Array[node] == NULL;
+    return Array[node - 1] == NULL;
 }
 
 /* bool match(){
@@ -158,6 +166,7 @@ bool alreadyChecked(nat node, ButterfliesList *Array){ //Return true when we alr
 } */
 
 void killButterfly(nat id, ButterfliesList *Array, ButterfliesList &List){ //Se me fue de las manos esto pero sino no me aseguro el O(1)
+    id = id - 1;
     if(Array[id] != NULL){
         if(Array[id] -> prev != NULL){
             Array[id] -> prev -> next = Array[id] -> next;
