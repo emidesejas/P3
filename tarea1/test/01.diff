@@ -1,0 +1,22 @@
+1c1,18
+< No consistente
+\ No newline at end of file
+---
+> ==14574== Invalid read of size 8
+> ==14574==    at 0x4021AD: resto_pares(rep_lista_pares*) (lista_pares.cpp:78)
+> ==14574==    by 0x401749: consistenteMaximal(rep_grafo*) (principal.cpp:111)
+> ==14574==    by 0x40121E: main (principal.cpp:44)
+> ==14574==  Address 0xa00000025 is not stack'd, malloc'd or (recently) free'd
+> ==14574== 
+> ==14574== 
+> ==14574== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+> ==14574==  Access not within mapped region at address 0xA00000025
+> ==14574==    at 0x4021AD: resto_pares(rep_lista_pares*) (lista_pares.cpp:78)
+> ==14574==    by 0x401749: consistenteMaximal(rep_grafo*) (principal.cpp:111)
+> ==14574==    by 0x40121E: main (principal.cpp:44)
+> ==14574==  If you believe this happened as a result of a stack
+> ==14574==  overflow in your program's main thread (unlikely but
+> ==14574==  possible), you can try to increase the size of the
+> ==14574==  main thread stack using the --main-stacksize= flag.
+> ==14574==  The main thread stack size used in this run was 8388608.
+> timeout: the monitored command dumped core

@@ -71,7 +71,7 @@ $(EJECUTABLE):principal.cpp  $(OS)
 
 
 # casos de prueba
-CASOS = 01 02
+CASOS = 01 02 03 04 05 06 07 08 17 m01 m02 m03 m04 m05 m06 m07 m08 m09 m10 m11 m12 m13
 
 # cadena de archivos, con directorio y extensión
 INS=$(CASOS:%=$(TESTDIR)/%.in)
@@ -126,6 +126,7 @@ clean_bin:
 # borra resultados de ejecución y comparación
 clean_test:
 	@rm -f $(TESTDIR)/*.sal $(TESTDIR)/*.diff $(TESTDIR)/*~
+	rm -f vgcore.*
 
 # borra binarios, resultados de ejecución y comparación, y copias de respaldo
 clean:clean_test clean_bin

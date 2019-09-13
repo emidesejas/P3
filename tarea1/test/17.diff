@@ -1,0 +1,22 @@
+1c1,18
+< No consistente
+\ No newline at end of file
+---
+> ==14652== Invalid read of size 8
+> ==14652==    at 0x4023C8: adyacentes(unsigned int, rep_grafo*) (grafo.cpp:59)
+> ==14652==    by 0x4015E2: consistenteMaximal(rep_grafo*) (principal.cpp:88)
+> ==14652==    by 0x40121E: main (principal.cpp:44)
+> ==14652==  Address 0x1b5c000000dd is not stack'd, malloc'd or (recently) free'd
+> ==14652== 
+> ==14652== 
+> ==14652== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+> ==14652==  Access not within mapped region at address 0x1B5C000000DD
+> ==14652==    at 0x4023C8: adyacentes(unsigned int, rep_grafo*) (grafo.cpp:59)
+> ==14652==    by 0x4015E2: consistenteMaximal(rep_grafo*) (principal.cpp:88)
+> ==14652==    by 0x40121E: main (principal.cpp:44)
+> ==14652==  If you believe this happened as a result of a stack
+> ==14652==  overflow in your program's main thread (unlikely but
+> ==14652==  possible), you can try to increase the size of the
+> ==14652==  main thread stack using the --main-stacksize= flag.
+> ==14652==  The main thread stack size used in this run was 8388608.
+> timeout: the monitored command dumped core

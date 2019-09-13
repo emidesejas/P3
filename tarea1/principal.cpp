@@ -47,6 +47,7 @@ int main(){
 
 bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja secuelas?
     //bool discovered[cantidad_vertices(G)];
+    nat aristas = cantidad_aristas(G);
     Edge Edges[cantidad_aristas(G)];
     bool label[cantidad_vertices(G)];
     ButterfliesList Butterflies[cantidad_vertices(G)];
@@ -86,15 +87,10 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
             nat vertexA = frente(elements);
             Lista_pares incidents = adyacentes(vertexA, G);
             
-            /* while(!es_vacia_lista_pares(incidents)){
-                printf("%d %d\n", vertexA, primer_par(incidents).id);
-                incidents = resto_pares(incidents); //Por alguna razon hay guardado un 0 y un 2 aca
-            } */
-
-            //discovered[vertexA] = true;
             killButterfly(vertexA, Butterflies, auxList); //I'm in love with Visual Studio Code
-            Par_nat_int vertexB = primer_par(incidents);
+            
             while(!es_vacia_lista_pares(incidents)){
+                Par_nat_int vertexB = primer_par(incidents);
                 //printf("%d %d", vertexA, vertexB.id);
                 if (vertexB.valor == int('=')){
                     label[vertexB.id - 1] = label[vertexA - 1];
@@ -111,10 +107,12 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
                     encolar(vertexB.id, elements);
                 }
+                if(!es_vacia_lista_pares(incidents)){
+                    incidents = resto_pares(incidents);
+                }
                 
-                incidents = resto_pares(incidents);
             }
-            killButterfly(vertexB.id, Butterflies, auxList);
+            //killButterfly(vertexB.id, Butterflies, auxList);
             destruir_lista_pares(incidents);
             desencolar(elements);
 
@@ -125,7 +123,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
 
     destruir_cola(elements);
     nat i = 0;
-    while(i < arista){
+    while(i < aristas){
         if (Edges[i].value == int('=')) {
             if (label[Edges[i].e1 - 1] != label[Edges[i].e2 - 1]){
                 break;
@@ -151,20 +149,12 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
         graph.second = resto_pares(graph.second);
     } */
 
-    
-    
-
-    if (i <= arista){ //El juail no llego a la ultima arista
+    if (i < aristas){ //El juail no llego a la ultima arista
         return false;
     } else {
         return true;
     }
 }
-/* 
-void bfs(nat node, Grafo G, bool *discovered){
-    discovered[node] = true;
-
-} */
 
 bool alreadyChecked(nat node, ButterfliesList *Array){ //Return true when we already checked node
     return Array[node - 1] == NULL;
