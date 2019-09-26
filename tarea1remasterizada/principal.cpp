@@ -44,10 +44,7 @@ int main(){
 void siguiente(bool explored[], nat max, nat &current);
 
 bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja secuelas?
-    //bool discovered[cantidad_vertices(G)];
-    //nat aristas = cantidad_aristas(G);
     nat vertices = cantidad_vertices(G);
-    //Edge Edges[aristas];
     bool label[vertices];
     bool explored[vertices];
     
@@ -59,7 +56,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     Cola elements = crear_cola();
     bool todoBien = true; //Lo usamos de flag para detectar cuando detener todos los juails
 
-    while (current != 0 && todoBien) { //jeje current != 0
+    while (current != 0 && todoBien) {
         encolar(current, elements);
         label[current - 1] = true;
         while(!es_vacia_cola(elements) && todoBien){
@@ -90,18 +87,13 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
                     }
                     incidents = resto_pares(incidents);
                 }
-                //Esto es para que solo se actualice el valor de current cuando el while no hizo break
-                /* if(!es_vacia_lista_pares(incidents)){
-                    break; //Para que salga del while principal
-                } */
             }
         }
-        if (todoBien){
+        if (todoBien){//Esto es para que solo se actualice el valor de current cuando el while no hizo break
             siguiente(explored,vertices,current);
         }
     }
     destruir_cola(elements);
-    //printf("%d\n", current);
     return !current;
 }
 
@@ -110,7 +102,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     El nat current se utiliza para empezar a buscar desde ese y asi no recorrer todos cada vez, se modifica el valor de current para seguir buscando desde ese en otra llamada de la funcion.
     Max debe ser el largo del array, si es n entonces el array es 0..n-1
 */
-void siguiente(bool explored[], nat max, nat &current){ //repensar lo de usar current como parametro, arreglame los indices
+void siguiente(bool explored[], nat max, nat &current){
     while(current <= max){
         if(!explored[current - 1]){
             break;
