@@ -1,18 +1,24 @@
-==7235== Invalid read of size 8
-==7235==    at 0x4021AD: resto_pares(rep_lista_pares*) (lista_pares.cpp:78)
-==7235==    by 0x401749: consistenteMaximal(rep_grafo*) (principal.cpp:111)
-==7235==    by 0x40121E: main (principal.cpp:44)
-==7235==  Address 0xa00000025 is not stack'd, malloc'd or (recently) free'd
-==7235== 
-==7235== 
-==7235== Process terminating with default action of signal 11 (SIGSEGV): dumping core
-==7235==  Access not within mapped region at address 0xA00000025
-==7235==    at 0x4021AD: resto_pares(rep_lista_pares*) (lista_pares.cpp:78)
-==7235==    by 0x401749: consistenteMaximal(rep_grafo*) (principal.cpp:111)
-==7235==    by 0x40121E: main (principal.cpp:44)
-==7235==  If you believe this happened as a result of a stack
-==7235==  overflow in your program's main thread (unlikely but
-==7235==  possible), you can try to increase the size of the
-==7235==  main thread stack using the --main-stacksize= flag.
-==7235==  The main thread stack size used in this run was 8388608.
+==3107== Invalid read of size 8
+==3107==    at 0x401B95: encolar(unsigned int, rep_cola*&) (cola.cpp:34)
+==3107==    by 0x40173F: consistenteMaximal(rep_grafo*) (principal.cpp:108)
+==3107==    by 0x40121E: main (principal.cpp:44)
+==3107==  Address 0x150000000a is not stack'd, malloc'd or (recently) free'd
+==3107== 
+==3107== 
+==3107== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+==3107==  Access not within mapped region at address 0x150000000A
+==3107==    at 0x401B95: encolar(unsigned int, rep_cola*&) (cola.cpp:34)
+==3107==    by 0x40173F: consistenteMaximal(rep_grafo*) (principal.cpp:108)
+==3107==    by 0x40121E: main (principal.cpp:44)
+==3107==  If you believe this happened as a result of a stack
+==3107==  overflow in your program's main thread (unlikely but
+==3107==  possible), you can try to increase the size of the
+==3107==  main thread stack using the --main-stacksize= flag.
+==3107==  The main thread stack size used in this run was 8388608.
+==3107== 608 (16 direct, 592 indirect) bytes in 1 blocks are definitely lost in loss record 6 of 8
+==3107==    at 0x4838E86: operator new(unsigned long) (vg_replace_malloc.c:344)
+==3107==    by 0x401B36: crear_cola() (cola.cpp:25)
+==3107==    by 0x40156B: consistenteMaximal(rep_grafo*) (principal.cpp:79)
+==3107==    by 0x40121E: main (principal.cpp:44)
+==3107== 
 timeout: the monitored command dumped core

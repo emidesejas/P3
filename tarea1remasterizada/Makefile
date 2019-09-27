@@ -79,7 +79,7 @@ $(EJECUTABLE):principal.cpp  $(OS)
 
 
 # casos de prueba
-CASOS = 01 02 03 04 05 06 07 08 09 10 11 12 13 #
+CASOS = 01 02 03 04 05 06 07 08 09 10 11 12 13 14 17#
 
 # cadena de archivos, con directorio y extensión
 INS=$(CASOS:%=$(TESTDIR)/%.in)

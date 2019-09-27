@@ -94,10 +94,12 @@ testing:$(DIFFS)
 		echo -- CASOS CON ERRORES --;                                   \
 		echo "$${LST_ERR}" | sed -e 's/$(TESTDIR)\///g' -e 's/.diff//g';\
 	fi
+	rm -f vgcore.*
 
 # borra binarios
 clean_bin:
-	rm -f $(EJECUTABLE) 
+	rm -f $(EJECUTABLE)
+	rm -f vgcore.*
 
 # borra resultados de ejecución y comparación
 clean_test:

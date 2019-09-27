@@ -113,7 +113,7 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
                 
             }
             //killButterfly(vertexB.id, Butterflies, auxList);
-            destruir_lista_pares(incidents);
+            //destruir_lista_pares(incidents);
             desencolar(elements);
 
         // Basicamente crear nuevo nodo de bfs levels con los nodos que son incidentes a v en el grafo (usar pila para ir haciendo pop de cada nodo y poder irlos agregando)
