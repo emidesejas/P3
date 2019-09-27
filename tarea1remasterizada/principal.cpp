@@ -8,20 +8,6 @@
 #include "include/cola.h"
 #include "include/pila.h"
 
-/* struct butterfly{
-    nat id;
-    butterfly *prev;
-    butterfly *next;
-};
-
-typedef butterfly *ButterfliesList;
-
-typedef struct edge_t{
-    nat e1;
-    nat e2;
-    int value;
-} Edge; */
-
 bool consistenteMaximal(Grafo G);
 
 int main(){
@@ -41,7 +27,24 @@ int main(){
     destruir_grafo(mariposas); //A.K.A. matar mariposas :(
 }
 
-void siguiente(bool explored[], nat max, nat &current);
+/*
+    Se fija si queda algun nodo sin explorar (basicamente buscar componentes conexas), si no queda nadie devuelve 0.
+    El nat current se utiliza para empezar a buscar desde ese y asi no recorrer todos cada vez, se modifica el valor de current para seguir buscando desde ese en otra llamada de la funcion.
+    Max debe ser el largo del array, si es n entonces el array es 0..n-1
+*/
+void siguiente(bool explored[], nat max, nat &current){
+    while(current <= max){
+        if(!explored[current - 1]){
+            break;
+        } else {
+            current++;
+        }
+    }
+
+    if (current > max){
+        current = 0;
+    }
+}
 
 bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja secuelas?
     nat vertices = cantidad_vertices(G);
@@ -95,23 +98,4 @@ bool consistenteMaximal(Grafo G) { // Quién dice que perder lógica no deja sec
     }
     destruir_cola(elements);
     return !current;
-}
-
-/*
-    Se fija si queda algun nodo sin explorar (basicamente buscar componentes conexas), si no queda nadie devuelve 0.
-    El nat current se utiliza para empezar a buscar desde ese y asi no recorrer todos cada vez, se modifica el valor de current para seguir buscando desde ese en otra llamada de la funcion.
-    Max debe ser el largo del array, si es n entonces el array es 0..n-1
-*/
-void siguiente(bool explored[], nat max, nat &current){
-    while(current <= max){
-        if(!explored[current - 1]){
-            break;
-        } else {
-            current++;
-        }
-    }
-
-    if (current > max){
-        current = 0;
-    }
 }

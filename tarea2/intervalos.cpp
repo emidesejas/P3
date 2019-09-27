@@ -96,6 +96,3 @@ bool *max_cantidad(intervalo_t *intervalos, nat n) {
     delete[] ordenados;
     return resultado;
 }
-
-//Bueno para buscar el minimo asumo que hay que usar divide and conquer pero estoy pensando
-//la recursion deberia tener algun parametro pa decirle que vaya matando a los no compatibles y que marque como true al que finalice primero que sea compatible
