@@ -1,0 +1,4 @@
+for(int i = 0; i < cantidad_de_palabras; i++){
+            printf("%s %d\n",cursor -> palabra, info_palabras[i].largo);
+            cursor = cursor -> siguiente;
+        }

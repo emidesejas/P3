@@ -39,6 +39,8 @@ typedef nodo_texto* texto;
 
 void procesar_palabra(texto &fuente, texto &cursor, char *palabra);
 
+void borrar_texto(texto &fuente);
+
 int main () {
     int L; // largo de la linea
     char nom_archivo[MAX_NOMBRE_ARCHIVO];
@@ -58,49 +60,79 @@ int main () {
     texto cursor = fuente;
     int cantidad_de_palabras = 0;
     int  res_lectura  = fscanf(descriptor, "%s",  palabra);
-    if(res_lectura != EOF){
+    /* if(res_lectura != EOF){
         cantidad_de_palabras++;
-    }
+    } */
     //printf("%s ",palabra);
-    procesar_palabra(fuente, cursor, palabra);
+    //procesar_palabra(fuente, cursor, palabra);
     
-    while (res_lectura  != EOF ) {
+    while (res_lectura  != EOF) {
         // procesar palabra
-        res_lectura = fscanf(descriptor, "%s", palabra);
+        
+        
+        //printf("%s\n", palabra);
         procesar_palabra(fuente, cursor, palabra);
-        //printf("%s \n", palabra);
         cantidad_de_palabras++;
+        res_lectura = fscanf(descriptor, "%s", palabra);
+        //printf("%s \n", palabra);
+        
     }
 
-
+    //printf("%d\n", cantidad_de_palabras);
     if(cantidad_de_palabras){
-
-        info_palabra info_palabras[cantidad_de_palabras];
-        cursor = fuente;
         int i = 0;
+        /* info_palabra info_palabras[cantidad_de_palabras];
+        cursor = fuente;
+        
         while(cursor != NULL){
             info_palabras[i].largo = cursor -> largo;
-            
+
             info_palabras[i].palabra = cursor -> palabra; //NOT SURE, quiero el puntero del array palabra peeeero
             cursor = cursor -> siguiente;
-        }
-        cursor = fuente;
-
-        for(int i = 0; i < cantidad_de_palabras; i++){
-            printf("%s %d\n",cursor -> palabra, info_palabras[i].largo);
-            cursor = cursor -> siguiente;
-        }
+        } */
 
         /* int opt[cantidad_de_palabras];
         opt[0] = 0; */
 
         mejor_palabra S[cantidad_de_palabras];
-        for(int i = 0; i < cantidad_de_palabras; i++){
+        cursor = fuente;
+        i = 0;
+        for(int i = 0; i<cantidad_de_palabras; i++){
+            S[i].indice = i;
+            S[i].valor = (L - (cursor -> largo))*(L - (cursor -> largo));
+            cursor = cursor -> siguiente;
+        }
+        
+        /* for(int i = 0; i < cantidad_de_palabras; i++){
             S[i].indice = i;
             S[i].valor = L - (info_palabras[i].largo);
+        } */
+
+        cursor = fuente;
+        i = 0;
+        int j = 0;
+        while(cursor != NULL){
+            int Ci = cursor -> largo;
+            texto cursorAd = cursor -> siguiente;
+            j = i + 1;
+            while(cursorAd != NULL){
+                Ci = Ci + 1 + cursorAd -> largo;
+                if(L >= Ci){
+                    if(S[i].valor > (L - Ci)*(L - Ci)){
+                        S[i].valor = (L - Ci)*(L - Ci);
+                        S[i].indice = j;
+                    }
+                } else {
+                    break; //TURBINA, lo cambio despues, quiero que funcione
+                }
+                cursorAd = cursorAd -> siguiente;
+                j++;
+            }
+            cursor = cursor -> siguiente;
+            i++;
         }
 
-        for(int i = 0; i < cantidad_de_palabras; i++){
+        /* for(int i = 0; i < cantidad_de_palabras; i++){
             int Ci = info_palabras[i].largo; //Ci es el costo total de todas las palabras juntas, con los espacios
             for(int j = i + 1; j < cantidad_de_palabras; j++){ //La palabra i ya fue computada en el for anterior
                 Ci = Ci + 1 + info_palabras[j].largo; //El +1 es el espacio en medio de las palabras, no se agrefa el espacio del final
@@ -114,31 +146,46 @@ int main () {
                 }
                 
             }
-        }
+        } */
 
         cursor = fuente;
         i = 0;
-        int j = 0;
+        j = 0;
         while(cursor != NULL){
             printf("%s", cursor -> palabra);
             if(S[i].indice == j){
                 printf("\n");
                 i = j + 1;
                 j = i;
-            } else {
+            } else if(cursor -> siguiente != NULL) {
                 printf(" ");
                 j++;
             }
             cursor = cursor -> siguiente;
         }
-        if(fuente == NULL){
-            printf("%s", "Es null");
-        }
+
+
     }
+
+    borrar_texto(fuente);
     
     // Se debe cerrar el arhivo
     fclose(descriptor);
     // procesar palabras leidas e imprimir
+}
+
+void borrar_texto(texto &fuente){
+    if(fuente != NULL){
+        texto cursor = fuente -> siguiente;
+        while (fuente != NULL){
+            delete fuente;
+            fuente = cursor;
+            if (cursor != NULL){
+                cursor = cursor -> siguiente;
+            }
+            
+        }
+    }
 }
 
 void procesar_palabra(texto &fuente, texto &cursor, char *palabra) {
@@ -154,7 +201,6 @@ void procesar_palabra(texto &fuente, texto &cursor, char *palabra) {
         cursor -> palabra[n] = palabra[n];
         n++;
     }
-    printf("%d\n", n);
     cursor -> palabra[n + 1] = '\0';
     cursor -> largo = n;
     cursor -> siguiente = NULL;
