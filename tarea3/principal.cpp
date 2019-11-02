@@ -42,6 +42,11 @@ struct info_palabra{
     char *palabra;
 };
 
+struct nodoSlack{
+    int ultimo;
+    Lista elems;
+};
+
 typedef nodo_texto* texto;
 
 void procesar_palabra(texto &fuente, texto &cursor, char *palabra);
@@ -93,9 +98,10 @@ int main () {
 
     //printf("%d\n", cantidad_de_palabras);
     if(cantidad_de_palabras){
-        int *s[cantidad_de_palabras];
+        nodoSlack s[cantidad_de_palabras];
         for(int i = 0; i < cantidad_de_palabras; i++){
-            s[i] = new int[cantidad_de_palabras - i];
+            s[i].elems = NULL;
+            s[i].ultimo = cantidad_de_palabras - 1;
         }
 
         cursor = fuente;
@@ -105,9 +111,10 @@ int main () {
         //Cargamos los valores de S, desperdiciamos mucha memoria, en el futuro deberia usar otra estructura que no sea una matriz
         for(int i=0; i<cantidad_de_palabras; i++){ //tenia un -1 cantidad de palabras, I dont know why
             int Ci = cursor->largo;
-            s[i][0] = L - Ci;
+            agregarNodoLista(s[i].elems, L - Ci);
+            s[i].ultimo = i;
             cursorAd = cursor->siguiente;
-            for(int j = 1; j < cantidad_de_palabras - i; j++){
+            for(int j = 1; j < cantidad_de_palabras - i && j < L/2; j++){
                 Ci = Ci + 1 + cursorAd ->largo; //el +1 es el espacio entre las palabras
                 if(L >= Ci){
                     s[i][j] = L - Ci;

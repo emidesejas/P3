@@ -1,7 +1,38 @@
-A cada uno de los muros de cada hexagono
-corresponden cinco anaqueles; cada
-anaquel encierra treinta y dos libros
-de formato uniforme; cada libro es de
-cuatrocientas diez paginas; cada pagina,
-de cuarenta renglones; cada renglon,
-de unas ochenta letras de color negro.
+==10909== Conditional jump or move depends on uninitialised value(s)
+==10909==    at 0x4016D2: main (principal.cpp:135)
+==10909== 
+==10909== Conditional jump or move depends on uninitialised value(s)
+==10909==    at 0x40173D: main (principal.cpp:135)
+==10909== 
+==10909== Invalid read of size 4
+==10909==    at 0x4016CD: main (principal.cpp:135)
+==10909==  Address 0x4d9baa4 is 0 bytes after a block of size 84 alloc'd
+==10909==    at 0x4839593: operator new[](unsigned long) (vg_replace_malloc.c:433)
+==10909==    by 0x4013CB: main (principal.cpp:101)
+==10909== 
+==10909== Invalid read of size 4
+==10909==    at 0x4016FB: main (principal.cpp:135)
+==10909==  Address 0x4d9baa4 is 0 bytes after a block of size 84 alloc'd
+==10909==    at 0x4839593: operator new[](unsigned long) (vg_replace_malloc.c:433)
+==10909==    by 0x4013CB: main (principal.cpp:101)
+==10909== 
+==10909== Invalid read of size 4
+==10909==    at 0x401720: main (principal.cpp:135)
+==10909==  Address 0x4d9baa4 is 0 bytes after a block of size 84 alloc'd
+==10909==    at 0x4839593: operator new[](unsigned long) (vg_replace_malloc.c:433)
+==10909==    by 0x4013CB: main (principal.cpp:101)
+==10909== 
+==10909== Invalid read of size 4
+==10909==    at 0x401762: main (principal.cpp:136)
+==10909==  Address 0x4d9baa4 is 0 bytes after a block of size 84 alloc'd
+==10909==    at 0x4839593: operator new[](unsigned long) (vg_replace_malloc.c:433)
+==10909==    by 0x4013CB: main (principal.cpp:101)
+==10909== 
+==10909== Invalid read of size 4
+==10909==    at 0x401787: main (principal.cpp:136)
+==10909==  Address 0x4d9baa4 is 0 bytes after a block of size 84 alloc'd
+==10909==    at 0x4839593: operator new[](unsigned long) (vg_replace_malloc.c:433)
+==10909==    by 0x4013CB: main (principal.cpp:101)
+==10909== 
+A cada uno de los muros de cada hexagono corresponden cinco anaqueles; cada anaquel encierra treinta y dos libros de formato uniforme;
+cada libro es de cuatrocientas diez paginas; cada pagina, de cuarenta renglones; cada renglon, de unas ochenta letras de color negro.
