@@ -24,7 +24,10 @@ struct nodoLista{
     nodoLista *sig;
 };
 
-typedef nodoLista *Lista;
+struct Lista{
+    nodoLista *primero;
+    nodoLista *ultimo;
+};
 
 struct nodo_texto{
     int largo;
@@ -53,7 +56,9 @@ void procesar_palabra(texto &fuente, texto &cursor, char *palabra);
 
 void borrar_texto(texto &fuente);
 
-void agregarNodoLista(Lista &l, int elem);
+void agrPrincipio(Lista &l, int elem);
+
+void agrFinal(Lista &l, int elem);
 
 void destruirLista(Lista &l);
 
@@ -100,7 +105,7 @@ int main () {
     if(cantidad_de_palabras){
         nodoSlack s[cantidad_de_palabras];
         for(int i = 0; i < cantidad_de_palabras; i++){
-            s[i].elems = NULL;
+            s[i].elems.primero = s[i].elems.ultimo = NULL;
             s[i].ultimo = cantidad_de_palabras - 1;
         }
 
@@ -110,19 +115,33 @@ int main () {
 
         //Cargamos los valores de S, desperdiciamos mucha memoria, en el futuro deberia usar otra estructura que no sea una matriz
         for(int i=0; i<cantidad_de_palabras; i++){ //tenia un -1 cantidad de palabras, I dont know why
-            int Ci = cursor->largo;
-            agregarNodoLista(s[i].elems, L - Ci);
+            int Ci = cursor -> largo;
+            agrPrincipio(s[i].elems, L - Ci);
             s[i].ultimo = i;
             cursorAd = cursor->siguiente;
-            for(int j = 1; j < cantidad_de_palabras - i && j < L/2; j++){
-                Ci = Ci + 1 + cursorAd ->largo; //el +1 es el espacio entre las palabras
+            int j = 1;
+            while(j < cantidad_de_palabras - i){
+                Ci = Ci + 1 + cursorAd -> largo; //el +1 es el espacio entre las palabras
                 if(L >= Ci){
-                    s[i][j] = L - Ci;
+                    agrFinal(s[i].elems, L - Ci);
+                    s[i].ultimo = j + i;
                 } else {
-                    s[i][j] = -1;
+                    s[i].ultimo = i + j-1; //en realidad seria j-1 pero como estan corridos
+                    break; //no queremos seguir cuando encontremos a uno que no sirve
                 }
                 cursorAd = cursorAd -> siguiente;
+                j++;
             }
+
+            /* for(int j = 1; j < cantidad_de_palabras - i && j < L/2; j++){ //CAMBIAR POR EL WHILE QUE TENGA COMO CONDICION QUE ULTIMO SEA DISTINTO DEL I
+                Ci = Ci + 1 + cursorAd ->largo; //el +1 es el espacio entre las palabras
+                if(L >= Ci){
+                    agrFinal(s[i].elems, L - Ci);
+                } else {
+                    s[i].ultimo = j; //en realidad seria j-1 pero como estan corridos
+                }
+                cursorAd = cursorAd -> siguiente;
+            } */
             cursor = cursor -> siguiente;
         }
 
@@ -131,26 +150,29 @@ int main () {
         int indice_opt[cantidad_de_palabras + 1];
         opt[0] = 0;
         indice_opt[0] = 0;
-        for(int i = 1; i <= cantidad_de_palabras; i++){
-            int min = ( s[i-1][0] * s[i-1][0] ) + opt[i-1]; //tenemos que inciaizar con algo min, no es el primero, seria el ultimo valor calculado del for
+        for(int i = 1; i <= cantidad_de_palabras; i++){ 
+            int min = ( primeroLista(s[i - 1].elems) * primeroLista(s[i - 1].elems) ) + opt[i-1]; //tenemos que incializar con algo min, no es el primero, seria el ultimo valor calculado del for
+            borrarPrimeroLista(s[i-1].elems);
             indice_opt[i] = i - 1;
             for(int j = 1; j < i; j++){
-                if(s[j-1][i-j] != -1 && (s[j-1][i-j]*s[j-1][i-j]) + opt[j-1] <= min){
-                    min = ( s[j-1][i-j] * s[j-1][i-j] ) + opt[j-1];
+                if( s[j - 1].ultimo >= i - 1  && ( primeroLista(s[j - 1].elems) * primeroLista(s[j - 1].elems) ) + opt[j-1] <= min){
+                    min = ( primeroLista(s[j - 1].elems) * primeroLista(s[j - 1].elems) ) + opt[j-1];
                     indice_opt[i] = j - 1; //Este es el j que nos sirve para i
+                    
+                } else if(s[j - 1].ultimo >= i) { //Si no se cumple esta condicion entonces el j t que tamos mirando no esta en la lista del i
+                    borrarPrimeroLista(s[j - 1].elems);
                 }
             }
             opt[i] = min;
         }
 
-
-        
-        Lista optimos = NULL;
-        agregarNodoLista(optimos, cantidad_de_palabras);
+        Lista optimos;
+        optimos.primero = optimos.ultimo = NULL;
+        agrPrincipio(optimos, cantidad_de_palabras);
         int i = indice_opt[cantidad_de_palabras]; //Arranca por el ultimo, queremos saber hasta donde imprimir en cada linea
         
         while(i > 0){ //Vamos hacia atras hasta llegar a 0
-            agregarNodoLista(optimos, i);
+            agrPrincipio(optimos, i);
             i = indice_opt[i];
             //printf("%d\n",i);
         }
@@ -173,7 +195,7 @@ int main () {
         }
         
         for(int i = 0; i < cantidad_de_palabras; i++){ //borrar la matriz
-            delete[] s[i];
+            destruirLista(s[i].elems);
         }
 
     }
@@ -219,36 +241,64 @@ void procesar_palabra(texto &fuente, texto &cursor, char *palabra) {
     cursor -> siguiente = NULL;
 }
 
-void agregarNodoLista(Lista &l, int elem){
-    if(l == NULL){
-        l = new nodoLista;
-        l -> dato = elem;
-        l -> sig =  NULL;
+void agrPrincipio(Lista &l, int elem){
+    if(l.primero == NULL){
+        l.primero = new nodoLista;
+        l.primero -> dato = elem;
+        l.primero -> sig =  NULL;
+        l.ultimo = l.primero;
     } else {
         nodoLista *nuevo = new nodoLista;
         nuevo -> dato = elem;
-        nuevo -> sig = l;
-        l = nuevo;
+        nuevo -> sig = l.primero;
+        l.primero = nuevo;
+    }
+}
+
+void agrFinal(Lista &l, int elem){
+    if(l.primero == NULL){
+        l.primero = new nodoLista;
+        l.primero -> dato = elem;
+        l.primero -> sig =  NULL;
+        l.ultimo = l.primero;
+    } else {
+        nodoLista *nuevo = new nodoLista;
+        nuevo -> dato = elem;
+        nuevo -> sig = NULL;
+        l.ultimo -> sig = nuevo;
+        l.ultimo = nuevo;
     }
 }
 
 int primeroLista(Lista l){ //Se asume lista no vacia
-    return l -> dato;
+    return l.primero -> dato;
 }
 
 void borrarPrimeroLista(Lista &l){
-    if(l != NULL){
-        nodoLista *temp = l ->sig;
-        delete l;
-        l = temp;
+    if(l.primero != NULL){
+        
+        if(l.primero == l.ultimo){
+            delete l.primero;
+            l.primero = NULL;
+            l.ultimo = NULL;
+        } else {
+            nodoLista *temp = l.primero ->sig;
+            delete l.primero;
+            l.primero = temp;        
+        }
     }
 }
 
-void destruirLista(Lista &l){
+void destruirNodo(nodoLista *l){
     if(l != NULL){
         if(l -> sig != NULL){
-            destruirLista(l->sig);
+            destruirNodo(l->sig);
         }
         delete l;
     }
 }
+
+void destruirLista(Lista &l){
+    destruirNodo(l.primero);
+}
+
