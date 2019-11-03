@@ -151,12 +151,12 @@ int main () {
         opt[0] = 0;
         indice_opt[0] = 0;
         for(int i = 1; i <= cantidad_de_palabras; i++){ 
-            int min = ( primeroLista(s[i - 1].elems) * primeroLista(s[i - 1].elems) ) + opt[i-1]; //tenemos que incializar con algo min, no es el primero, seria el ultimo valor calculado del for
+            int min = ( primeroLista(s[i - 1].elems) * primeroLista(s[i - 1].elems) ) + opt[i-1]; //tenemos que incializar con algo min
             borrarPrimeroLista(s[i-1].elems);
             indice_opt[i] = i - 1;
 
             int j;
-            if(i > L/2){
+            if(i > L/2){ //Para no buscar al pedo
                 j = i - L/2;
             } else {
                 j = 1;
@@ -172,21 +172,7 @@ int main () {
                 j++;
             }
 
-
-
-
-            /* for(int j = 1; j < i; j++){
-                if( s[j - 1].ultimo >= i - 1  && ( primeroLista(s[j - 1].elems) * primeroLista(s[j - 1].elems) ) + opt[j-1] <= min){
-                    min = ( primeroLista(s[j - 1].elems) * primeroLista(s[j - 1].elems) ) + opt[j-1];
-                    indice_opt[i] = j - 1; //Este es el j que nos sirve para i
-                    borrarPrimeroLista(s[j - 1].elems);
-                } else if(s[j - 1].ultimo >= i) { //Si no se cumple esta condicion entonces el j t que tamos mirando no esta en la lista del i
-                    borrarPrimeroLista(s[j - 1].elems);
-                }
-            } */
-
-            
-            opt[i] = min;
+            opt[i] = min; //Es o bien el que fue calculado antes del while o alguno que se calculo adentro
         }
 
         Lista optimos;
@@ -197,7 +183,6 @@ int main () {
         while(i > 0){ //Vamos hacia atras hasta llegar a 0
             agrPrincipio(optimos, i);
             i = indice_opt[i];
-            //printf("%d\n",i);
         }
 
         int actual = 0;
@@ -217,7 +202,7 @@ int main () {
             actual++;
         }
         
-        for(int i = 0; i < cantidad_de_palabras; i++){ //borrar la matriz
+        for(int i = 0; i < cantidad_de_palabras; i++){ //borrar la pseudo matriz, creo que no hace falta
             destruirLista(s[i].elems);
         }
 
