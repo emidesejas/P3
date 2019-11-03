@@ -158,7 +158,7 @@ int main () {
                 if( s[j - 1].ultimo >= i - 1  && ( primeroLista(s[j - 1].elems) * primeroLista(s[j - 1].elems) ) + opt[j-1] <= min){
                     min = ( primeroLista(s[j - 1].elems) * primeroLista(s[j - 1].elems) ) + opt[j-1];
                     indice_opt[i] = j - 1; //Este es el j que nos sirve para i
-                    
+                    borrarPrimeroLista(s[j - 1].elems);
                 } else if(s[j - 1].ultimo >= i) { //Si no se cumple esta condicion entonces el j t que tamos mirando no esta en la lista del i
                     borrarPrimeroLista(s[j - 1].elems);
                 }
